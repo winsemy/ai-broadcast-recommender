@@ -1,1 +1,124 @@
+<!DOCTYPE htm
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 기독교 방송 추천 (v2) - 다크 테마</title>
+    <style>
+        /* (CSS 스타일 - 다크 테마) */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; background-color: #1a1a1a; padding: 20px; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .app-cl>ontainer { max-width: 600px; width: 100%; background: #2a2a2a; padding: 30px 40px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
+        h1 { color: #ffd700; text-align: center; margin-top: 0; }
+        p.intro { text-align: center; color: #e0e0e0; margin-bottom: 30px; }
+        .question { margin-bottom: 20px; background: #3a3a3a; padding: 20px; border-radius: 8px; border: 1px solid #4a4a4a; }
+        .question strong { display: block; margin-bottom: 10px; color: #ffffff; }
+        select { width: 100%; padding: 10px; font-size: 1em; border-radius: 5px; border: 1px solid #666; background-color: #4a4a4a; color: #ffffff; }
+        select option { background-color: #4a4a4a; color: #ffffff; }
+        button { background: #ffd700; color: #1a1a1a; padding: 15px 20px; border: none; cursor: pointer; font-size: 1.1em; font-weight: bold; width: 100%; border-radius: 8px; transition: background-color 0.3s; }
+        button:hover { background: #e6c200; }
+        .loader { border: 5px solid #4a4a4a; border-top: 5px solid #ffd700; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 30px auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #results { margin-top: 30px; border-top: 2px solid #4a4a4a; padding-top: 20px; }
+        h2.results-title { text-align: center; color: #ffd700; }
+        .program { border: 1px solid #4a4a4a; padding: 16px; margin-bottom: 12px; background: #3a3a3a; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; }
+        .program:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .program strong { font-size: 1.2em; color: #ffd700; display: block; }
+        .program .program-tags { font-size: 0.9em; color: #cccccc; margin-top: 5px; }
+        p { color: #e0e0e0; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <h1>💡 당신의 신앙 스타일을 알려주세요!</h1>
+        <p class="intro">2가지 질문에 답해주시면, 5개 방송사의 최신 프로그램 중<br>성향에 맞는 콘텐츠를 AI가 추천해 드립니다.</p>
+
+        <div class="question">
+            <strong>[질문 1] 지금 어떤 분위기를 선호하세요?</strong><br>
+            <select id="choice1">
+                <option value="묵상">1: 조용히 말씀을 묵상하고 싶어요.</option>
+                <option value="찬양">2: 뜨겁게 찬양하고 싶어요.</option>
+                <option value="간증">3: 신앙인의 삶의 이야기가 궁금해요.</option>
+            </select>
+        </div>
+
+        <div class="question">
+            <strong>[질문 2] 가장 관심 있는 주제는 무엇인가요?</strong><br>
+            <select id="choice2">
+                <option value="성경공부">1: 성경을 깊이 있게 배우고 싶어요.</option>
+                <option value="시사교양">2: 기독교적 관점의 뉴스가 궁금해요.</option>
+                <option value="다음세대">3: 아이들을 위한 콘텐츠가 필요해요.</option>
+            </select>
+        </div>
+
+        <button onclick="getRecommendation()">AI 추천받기</button>
+        <div id="loader" class="loader"></div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function getRecommendation() {
+            let choice1 = document.getElementById('choice1').value;
+            let choice2 = document.getElementById('choice2').value;
+            let userTags = []; // 수정: 빈 배열로 초기화
+            if (choice1 === '묵상') userTags.push('#말씀묵상', '#조용한', '#설교');
+            else if (choice1 === '찬양') userTags.push('#뜨거운찬양', '#기도', '#예배실황');
+            else if (choice1 === '간증') userTags.push('#간증', '#삶의이야기', '#힐링토크');
+            if (choice2 === '성경공부') userTags.push('#성경공부', '#깊이있는');
+            else if (choice2 === '시사교양') userTags.push('#시사교양', '#기독교관점');
+            else if (choice2 === '다음세대') userTags.push('#다음세대', '#어린이');
+            let uniqueTags = [...new Set(userTags)]; // 수정: 중복 제거 로직 복구
+            
+            let loader = document.getElementById('loader');
+            let resultsDiv = document.getElementById('results');
+
+            loader.style.display = 'block';
+            resultsDiv.innerHTML = '';
+
+            try {
+                // (최종 수정된 Replit 주소와 포트 5000 사용)
+                // Replit 주소: https://python-repl-winsemy.replit.app
+                const response = await fetch('https://python-repl-winsemy.replit.app/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tags: uniqueTags })
+                });
+                if (!response.ok) throw new Error(`서버 응답 오류: ${response.status}`);
+                
+                const recommendations = await response.json();
+                
+                displayResults(recommendations);
+
+            } catch (error) {
+                console.error("서버 통신 오류:", error);
+                resultsDiv.innerHTML = `<p style="color: red; text-align: center;">오류: 추천 서버에 연결할 수 없습니다.<br>Replit에서 'server.py' 파일이 켜져 있는지 확인하세요.</p>`;
+            
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        function displayResults(results) {
+            let resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `<h2 class="results-title">✨ AI 추천 프로그램 목록 ✨</h2>`;
+            
+            if (results.length === 0) {
+                resultsDiv.innerHTML += "<p style='text-align: center; color: #e0e0e0;'>아쉽지만, 현재 성향에 맞는 프로그램을 찾지 못했습니다.</p>";
+                return;
+            }
+
+            results.forEach(program => {
+                resultsDiv.innerHTML += `
+                    <div class="program">
+                        <strong>[${program.방송사}] ${program.프로그램명}</strong>
+                        <div class="program-tags">
+                            <small>관련 태그: ${program.태그.join(', ')}</small>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>
 
