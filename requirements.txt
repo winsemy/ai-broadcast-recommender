@@ -1,1 +1,2 @@
-
+web: gunicorn server:app
+3.  **GitHub Desktop** 앱에서 이 파일들을 **`ai-broadcast-recommender`** 저장소에 **`Push`** 합니다.
