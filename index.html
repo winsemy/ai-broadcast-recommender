@@ -1,4 +1,4 @@
-<!DOCTYPE htm
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <style>
         /* (CSS 스타일 - 다크 테마) */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; background-color: #1a1a1a; padding: 20px; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .app-cl>ontainer { max-width: 600px; width: 100%; background: #2a2a2a; padding: 30px 40px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
+        .app-container { max-width: 600px; width: 100%; background: #2a2a2a; padding: 30px 40px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
         h1 { color: #ffd700; text-align: center; margin-top: 0; }
         p.intro { text-align: center; color: #e0e0e0; margin-bottom: 30px; }
         .question { margin-bottom: 20px; background: #3a3a3a; padding: 20px; border-radius: 8px; border: 1px solid #4a4a4a; }
@@ -60,14 +60,14 @@
         async function getRecommendation() {
             let choice1 = document.getElementById('choice1').value;
             let choice2 = document.getElementById('choice2').value;
-            let userTags = []; // 수정: 빈 배열로 초기화
+            let userTags = [];
             if (choice1 === '묵상') userTags.push('#말씀묵상', '#조용한', '#설교');
             else if (choice1 === '찬양') userTags.push('#뜨거운찬양', '#기도', '#예배실황');
             else if (choice1 === '간증') userTags.push('#간증', '#삶의이야기', '#힐링토크');
             if (choice2 === '성경공부') userTags.push('#성경공부', '#깊이있는');
             else if (choice2 === '시사교양') userTags.push('#시사교양', '#기독교관점');
             else if (choice2 === '다음세대') userTags.push('#다음세대', '#어린이');
-            let uniqueTags = [...new Set(userTags)]; // 수정: 중복 제거 로직 복구
+            let uniqueTags = [...new Set(userTags)];
             
             let loader = document.getElementById('loader');
             let resultsDiv = document.getElementById('results');
@@ -121,4 +121,3 @@
     </script>
 </body>
 </html>
-
